@@ -10,7 +10,7 @@
   'use strict';
   // BEGIN module-scope vars
   var
-    TAFFY = require( '../taffy.js' ).taffy,
+    TAFFY = require( '../taffy.js' ),
 
     // Load libraries
     // Declare data sources
@@ -50,7 +50,7 @@
   // END cloneFriendList
 
   // BEGIN testSmoke
-  testSmoke = function ( test_obj ) {
+  testSmoke = function () {
     var
       friend_db, query_list, query_count, initial_list, expect_map,
       idx, bit_list, key_name, val_data, expect_data, actual_str, msg_str,
@@ -98,7 +98,6 @@
     ];
 
     query_count = query_list.length;
-    test_obj.expect( query_count );
 
     expect_map = {
       filter_city     : [{"id":1,"gender":"M","first":"John","last":"Smith","city":"Seattle, WA","status":"Active","___id":"T000002R000002","___s":true},{"id":4,"gender":"F","first":"Jennifer","last":"Gill","city":"Seattle, WA","status":"Active","___id":"T000002R000005","___s":true}],
@@ -166,16 +165,14 @@
 
       actual_str = JSON.stringify( partial );
       msg_str = actual_str + ' === ' + JSON.stringify( expect_data );
-      test_obj.deepEqual( partial, expect_data, msg_str );
+      expect(partial).toEqual(expect_data);
     }
-    test_obj.done();
   };
   // END testSmoke
 
   // BEGIN testShowBug
-  testShowBug = function ( test_obj ) {
+  testShowBug = function () {
     var friend_db = TAFFY( cloneFriendList() );
-    test_obj.expect( 0 );
 
     friend_db().each(function ( row_map, idx ) {
       if ( row_map.city === 'Seattle, WA' ){
@@ -206,15 +203,10 @@
     // );
     // console.log( friend_db().get() );
     // console.log( '... that reflects the taffy collection.' );
-
-    test_obj.done();
   };
   // END testShowBug
 
-  testDummy = function ( test_obj ) {
-    test_obj.expect( 0 );
-    test_obj.done();
-
+  testDummy = function () {
     // See http://stackoverflow.com/questions/10952806
     // Suprisingly, a non-zero exit value (echo $?) is provided
     // when the tests do not pass, which is awesome!
@@ -227,3 +219,16 @@
     testShowBug : testShowBug,
     testDummy   : testDummy
   };
+  
+  test('smoke', () => {
+    testSmoke()
+  });
+  
+  test('dummy', () => {
+    testDummy()
+  })
+  
+  test('show byg', () => {
+    testShowBug()
+  })
+  
